@@ -8,24 +8,26 @@
 #
 
 library(shiny)
+library(evaluate)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
 
     # Application title
-    titlePanel("Next Word Predictor"),
+    titlePanel("bookish-guide: Next Word Predictor"),
 
     # Sidebar with a slider input for number of bins
     sidebarLayout(
         sidebarPanel(
             actionButton("button1", "1st word"),
-            actionButton("button2", "2nd word"),
-            actionButton("button3", "3rd word")
+            # actionButton("button2", "2nd word"),
+            # actionButton("button3", "3rd word")
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-            textAreaInput("text_input", "Enter Text Here:", width = "500px")
+            textAreaInput("text_input", "Enter Text Here:", width = "500px"),
+            includeMarkdown("documentation.md")
         )
     )
 ))
