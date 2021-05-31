@@ -39,4 +39,6 @@ User Interface
 Final Notes
 ========================================================
 
-- The source code is available here
+- Jump in and check out my app!
+- The source code is available here https://github.com/ivanjjj/bookish-guide
+- The app is available here https://ivanjjj.shinyapps.io/bookish-guide/
