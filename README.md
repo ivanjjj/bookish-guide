@@ -1,2 +1,2 @@
 # bookish-guide
-Go to [here](index.html) for more information
+Go to [here](https://ivanjjj.github.io/bookish-guide/) for more information
