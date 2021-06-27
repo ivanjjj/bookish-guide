@@ -1,37 +1,25 @@
 ---
-title: "bookish-guide"
+title: "bookish-guide model creator"
 author: "Ivan Jennings"
 date: "21/04/2021"
 output:
   html_document:
     keep_md: yes
 ---
+Load in the appropriate libraries
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 library(dplyr)
-## library(tidytext)
-## library(ggplot2)
-## library(gridExtra)
-## library(tm)
 library(stopwords)
-## library(textclean)
-## library(stringr)
-## library(RWeka)
-## library(rJava)
-## library(slam)
-## library(SnowballC)
 library(quanteda)
-## library(qdap)
-## library(markovchain)
-## library(text2vec)
 library(quanteda.textplots)
 library(quanteda.textmodels)
 library(tidyr)
-
 ```
 
-## Executive Summary
+## Download
+Code to download the appropriate files and save them into the local directory. We will use the swiftkey data set which includes a 3 corpus' of text from news articles, twitter and blogs.
 
 ```{r download_file}
 ## Download file if it doesn't already exist
@@ -50,6 +38,10 @@ if(!file.exists("badwords.txt")){
 
 ```
 
+## Load
+
+Next we will load the data into R from the downloaded files.
+
 ```{r load_data, cache=TRUE}
 ## load data into R
 blog_file <- paste(getwd(), "/final/en_US/en_US.blogs.txt", sep = "")
@@ -64,14 +56,18 @@ badwords <- read.delim("badwords.txt", header = FALSE, quote= "", sep = "\n", sk
 names(badwords) <- c("txt")
 ```
 
+# Transform
+
+The following code extracts 10% of the samples of text, so that we don't overload the training model with data. We also set the seed so that this can be reproduced.
 
 ```{r, sample_data}
-## Get sample of 1% of each corpus, set seed for reproducibility
 set.seed(553)
 blog <- data.frame(txt = sample(blog_data$V1, length(blog_data$V1)*0.1, replace = FALSE))
 twitter <- data.frame(txt = sample(twitter_data$V1, length(twitter_data$V1)*0.1, replace = FALSE))
 news <- data.frame(txt = sample(news_data$V1, length(news_data$V1)*0.1, replace = FALSE))
 ```
+
+Next we use the quanteda functions to extract the word tokens and remove unnecessary data from the corpus - e.g. punctuation, http code. We then convert the list of tokens into a document freqency matrix.
 
 ```{r}
 
@@ -89,6 +85,8 @@ tokens2 <- tokens(tokens, remove_numbers=TRUE, remove_punct=TRUE, remove_symbols
 
 dfm <- tokens2 %>% dfm()
 ```
+
+The following sets of code will extract bigrams, trigrams, quadrams & nograms (nograms = unigrams) and then save this into csv files for later use in our prediction model.
 
 ```{r bigram}
 bigrams <- tokens2 %>% tokens_ngrams(2) %>% dfm()
@@ -165,6 +163,8 @@ y <- y %>%
 write.csv(y, "nogram.csv", row.names = FALSE)
 rm(nograms, nograms_select, dfm, badwords, tokens, tokens2, x, y)
 ```
+
+Here is a print out of all the code used in this notebook.
 
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
 ```

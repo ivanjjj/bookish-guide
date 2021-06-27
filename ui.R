@@ -1,30 +1,25 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# bookish-guide UI
+# Author: Ivan Jennings
 
+# Load in relevant libraries
 library(shiny)
 library(evaluate)
 
-# Define UI for application that draws a histogram
+# Define UI for application that predicts 3 next words
 shinyUI(fluidPage(
 
     # Application title
     titlePanel("bookish-guide: Next Word Predictor"),
 
-    # Sidebar with a slider input for number of bins
+    # Display 3 buttons with predictions
     sidebarLayout(
         sidebarPanel(
             actionButton("button1", "1st word"),
-            # actionButton("button2", "2nd word"),
-            # actionButton("button3", "3rd word")
+            actionButton("button2", "2nd word"),
+            actionButton("button3", "3rd word")
         ),
 
-        # Show a plot of the generated distribution
+        # Code for displaying the main text input
         mainPanel(
             textAreaInput("text_input", "Enter Text Here:", width = "500px"),
             includeMarkdown("documentation.md")
