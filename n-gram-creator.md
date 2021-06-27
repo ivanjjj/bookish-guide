@@ -8,11 +8,49 @@ output:
 ---
 Load in the appropriate libraries
 
-```{r setup}
+
+```r
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(stopwords)
 library(quanteda)
+```
+
+```
+## Package version: 3.0.0
+## Unicode version: 10.0
+## ICU version: 61.1
+```
+
+```
+## Parallel computing: 8 of 8 threads used.
+```
+
+```
+## See https://quanteda.io for tutorials and examples.
+```
+
+```r
 library(quanteda.textplots)
 library(quanteda.textmodels)
 library(tidyr)
@@ -21,7 +59,8 @@ library(tidyr)
 ## Download
 Code to download the appropriate files and save them into the local directory. We will use the swiftkey data set which includes a 3 corpus' of text from news articles, twitter and blogs.
 
-```{r download_file}
+
+```r
 ## Download file if it doesn't already exist
 if(!file.exists("swiftkey_data.zip")){
   url <- "https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
@@ -35,14 +74,14 @@ if(!file.exists("badwords.txt")){
   url2 <- "https://www.cs.cmu.edu/~biglou/resources/bad-words.txt"
   download.file(url2, "badwords.txt")
 }
-
 ```
 
 ## Load
 
 Next we will load the data into R from the downloaded files.
 
-```{r load_data, cache=TRUE}
+
+```r
 ## load data into R
 blog_file <- paste(getwd(), "/final/en_US/en_US.blogs.txt", sep = "")
 news_file <- paste(getwd(), "/final/en_US/en_US.news.txt", sep = "")
@@ -60,7 +99,8 @@ names(badwords) <- c("txt")
 
 The following code extracts 10% of the samples of text, so that we don't overload the training model with data. We also set the seed so that this can be reproduced.
 
-```{r, sample_data}
+
+```r
 set.seed(553)
 blog <- data.frame(txt = sample(blog_data$V1, length(blog_data$V1)*0.1, replace = FALSE))
 twitter <- data.frame(txt = sample(twitter_data$V1, length(twitter_data$V1)*0.1, replace = FALSE))
@@ -69,8 +109,8 @@ news <- data.frame(txt = sample(news_data$V1, length(news_data$V1)*0.1, replace 
 
 Next we use the quanteda functions to extract the word tokens and remove unnecessary data from the corpus - e.g. punctuation, http code. We then convert the list of tokens into a document freqency matrix.
 
-```{r}
 
+```r
 x <- rbind(twitter,
            news, blog)
 x <- data.frame(doc_id = row.names(x),
@@ -88,7 +128,8 @@ dfm <- tokens2 %>% dfm()
 
 The following sets of code will extract bigrams, trigrams, quadrams & nograms (nograms = unigrams) and then save this into csv files for later use in our prediction model.
 
-```{r bigram, cache=TRUE}
+
+```r
 bigrams <- tokens2 %>% tokens_ngrams(2) %>% dfm()
 
 feat <- names(topfeatures(bigrams, 10000))
@@ -107,7 +148,8 @@ write.csv(y, "bigram.csv", row.names = FALSE)
 rm(bigrams, bigrams_select)
 ```
 
-```{r trigram, cache=TRUE}
+
+```r
 trigrams <- tokens2 %>% tokens_ngrams(3) %>% dfm()
 
 feat <- names(topfeatures(trigrams, 10000))
@@ -126,7 +168,8 @@ write.csv(y, "trigram.csv", row.names = FALSE)
 rm(trigrams, trigrams_select)
 ```
 
-```{r quadgram, cache=TRUE}
+
+```r
 quadgrams <- tokens2 %>% tokens_ngrams(4) %>% dfm()
 
 feat <- names(topfeatures(quadgrams, 10000))
@@ -143,10 +186,10 @@ y <- y %>%
 
 write.csv(y, "quadgram.csv", row.names = FALSE)
 rm(quadgrams, quadgrams_select)
-
 ```
 
-```{r nogram, cache=TRUE}
+
+```r
 nograms <- tokens2 %>% tokens_ngrams(1) %>% dfm()
 
 feat <- names(topfeatures(nograms, 100))
